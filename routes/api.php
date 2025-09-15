@@ -20,3 +20,25 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/login', [AuthController::class, 'login']);
+
+
+Route::get('/dashboard', function () {
+    return response()->json([
+        'user' => 'Bronny',
+        'totalStudents' => 2847,
+        'totalFaculty' => 178,
+        'activeCourses' => 294,
+        'programs' => 9,
+        'facultyPerDept' => 19,
+        'programOverview' => [
+            [
+                'name' => 'Computer Studies Program (CSP)',
+                'progress' => 88,
+            ],
+            [
+                'name' => 'Nursing Program',
+                'progress' => 92,
+            ],
+        ],
+    ]);
+});

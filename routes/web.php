@@ -20,3 +20,7 @@ Route::get('/{any}', function () {
 //sa Admin Login Route
 Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('/login', 'Auth\LoginController@login');
+Route::get('/dashboard', [Project::class, 'index']);
+use App\Http\Controllers\ProjectController;
+
+Route::get('/dashboard', [ProjectController::class, 'index'])->name('dashboard');
