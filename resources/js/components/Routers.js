@@ -1,31 +1,65 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useMemo } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
-import Home from "./Home";
-import AboutUs from "./AboutUs";
-import ContactUs from "./ContactUs";
+
+
+
 import Login from "./Login";
+import Register from "./Register";
+import Browse from "./Browse";
+import AuctionDetail from "./AuctionDetail";
+import Dashboard from "./Dashboard";
 import AdminDashboard from "./AdminDashboard";
-import Navbar from "./Navbar";
+import CreateAuction from "./CreateAuction";
+import AuctifyHeader from "./AuctifyHeader";
+import AboutUs from "./AboutUs";
+
+function RequireAuth({ children }) {
+    const location = useLocation();
+    const authed = useMemo(() => {
+        const token = localStorage.getItem("authToken");
+        const user = localStorage.getItem("user");
+        return Boolean(token && user);
+    }, [location.pathname]);
+
+    if (!authed) {
+        return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+    }
+    return children;
+}
 
 export default function Routers() {
     return (
         <Router>
-            <Navbar />
-            <div className="page-content">
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/aboutus" element={<AboutUs />} />
-                    <Route path="/contactus" element={<ContactUs />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/admin" element={<AdminDashboard />} />
-                </Routes>
-            </div>
+            <Routes>
+                <Route
+                    path="/login"
+                    element={<Login />}
+                />
+                <Route
+                    path="/register"
+                    element={<Register />}
+                />
+                <Route
+                    path="/*"
+                    element={
+                        <>
+                            <AuctifyHeader />
+                            <div className="page-content auctify-container">
+                                <Routes>
+                                    <Route path="/" element={<RequireAuth><Dashboard /></RequireAuth>} />
+                                    <Route path="/admin" element={<RequireAuth><AdminDashboard /></RequireAuth>} />
+                                    <Route path="/browse" element={<RequireAuth><Browse /></RequireAuth>} />
+                                    <Route path="/auction/:id" element={<RequireAuth><AuctionDetail /></RequireAuth>} />
+                                    <Route path="/auctions/:id" element={<RequireAuth><AuctionDetail /></RequireAuth>} />
+                                    <Route path="/aboutus" element={<RequireAuth><AboutUs /></RequireAuth>} />
+                                    <Route path="/sell" element={<RequireAuth><CreateAuction /></RequireAuth>} />
+                                </Routes>
+                            </div>
+                        </>
+                    }
+                />
+            </Routes>
         </Router>
     );
-}
-
-if (document.getElementById('root')) {
-    ReactDOM.render(<Routers />, document.getElementById('root')); 
 }

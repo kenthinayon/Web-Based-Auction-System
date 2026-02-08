@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\User;
 
 class User extends Authenticatable
 {
@@ -21,6 +22,15 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'seller_verified',
+        'is_active',
+        'banned_at',
+        'country',
+        'state',
+        'city',
+        'street',
+        'phone',
     ];
 
     /**
@@ -40,5 +50,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'seller_verified' => 'boolean',
+        'is_active' => 'boolean',
+        'banned_at' => 'datetime',
     ];
 }

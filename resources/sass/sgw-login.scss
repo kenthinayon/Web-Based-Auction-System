@@ -1,0 +1,256 @@
+// ShopGoodwill-inspired login page styles (scoped)
+
+.sgw-login {
+  min-height: 100vh;
+  background: #ffffff;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 28px 16px;
+}
+
+.sgw-login__inner {
+  width: min(1100px, 100%);
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr;
+  gap: 40px;
+  padding-top: 8px;
+}
+
+@media (max-width: 980px) {
+  .sgw-login__inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+.sgw-login__brand {
+  height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+.sgw-login__logo {
+  height: 28px;
+  width: auto;
+}
+
+.sgw-login__title {
+  margin: 18px 0 10px;
+  font-size: 30px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.sgw-login__copy {
+  margin: 0;
+  color: #374151;
+  line-height: 1.55;
+  max-width: 560px;
+  font-size: 14px;
+}
+
+.sgw-login__imageWrap {
+  margin-top: 22px;
+  max-width: 520px;
+}
+
+.sgw-login__image {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  display: block;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+  transform: rotate(-2deg);
+  background: #f3f4f6;
+}
+
+.sgw-login__right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 980px) {
+  .sgw-login__right {
+    justify-content: flex-start;
+  }
+}
+
+.sgw-login__panel {
+  width: 100%;
+  max-width: 520px;
+}
+
+.sgw-login__panelTitle {
+  margin: 6px 0 4px;
+  font-size: 28px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.sgw-login__panelSub {
+  color: #4b5563;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+.sgw-login__panelSub a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.sgw-login__alert {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #7f1d1d;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.sgw-login__form {
+  border: 1px solid #d1d5db;
+  border-radius: 2px;
+  padding: 18px 16px 16px;
+  background: #ffffff;
+  position: relative;
+}
+
+.sgw-login__select {
+  width: 100%;
+  border: 1px solid #9ca3af;
+  border-radius: 2px;
+  padding: 10px 10px;
+  font-size: 14px;
+  outline: none;
+  background: #ffffff;
+}
+
+.sgw-login__select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.sgw-login__grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 520px) {
+  .sgw-login__grid2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sgw-login__loadingOverlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.72);
+  animation: sgwFadeIn 160ms ease-out;
+}
+
+.sgw-login__form.is-loading {
+  transform: translateY(0);
+}
+
+@keyframes sgwFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.sgw-login__reqNote {
+  text-align: right;
+  font-size: 11px;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+.sgw-login__label {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.sgw-login__labelRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #111827;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.sgw-login__req {
+  color: #dc2626;
+  font-weight: 800;
+}
+
+.sgw-login__form input[type="email"],
+.sgw-login__form input[type="password"] {
+  width: 100%;
+  border: 1px solid #9ca3af;
+  border-radius: 2px;
+  padding: 10px 10px;
+  font-size: 14px;
+  outline: none;
+}
+
+.sgw-login__form input[type="email"]:focus,
+.sgw-login__form input[type="password"]:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.sgw-login__remember {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 14px;
+  font-size: 13px;
+  color: #111827;
+}
+
+.sgw-login__submit {
+  width: 100%;
+  border: none;
+  border-radius: 2px;
+  padding: 12px 14px;
+  background: #2f6ea3;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.sgw-login__submit:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.sgw-login__links {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.sgw-login__links a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.sgw-login__sep {
+  color: #9ca3af;
+}
+
+.sgw-login__hint {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #6b7280;
+  line-height: 1.35;
+}

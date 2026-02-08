@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+// SPA entrypoint only; API routes live in routes/api.php
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,11 +18,3 @@ use Illuminate\Support\Facades\Route;
 Route::get('/{any}', function () {
     return view('welcome');
 })->where('any', '.*');
-
-//sa Admin Login Route
-Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('/login', 'Auth\LoginController@login');
-Route::get('/dashboard', [Project::class, 'index']);
-use App\Http\Controllers\ProjectController;
-
-Route::get('/dashboard', [ProjectController::class, 'index'])->name('dashboard');

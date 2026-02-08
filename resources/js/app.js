@@ -12,4 +12,12 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-require('./components/Routers');   
+const React = require('react');
+const { createRoot } = require('react-dom/client');
+
+const App = require('./components/Routers').default;
+
+const el = document.getElementById('root');
+if (el) {
+	createRoot(el).render(React.createElement(App));
+}

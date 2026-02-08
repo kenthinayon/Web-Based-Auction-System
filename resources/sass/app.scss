@@ -8,8 +8,11 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
-@import './home.scss';
-@import './aboutus.scss';
-@import './contactus.scss';
-@import './navbar.scss';
+
 @import './login.scss';
+
+// ShopGoodwill-inspired login page
+@import './sgw-login.scss';
+
+// Auctify UI (ShopGoodwill-inspired)
+@import './auctify.scss';
