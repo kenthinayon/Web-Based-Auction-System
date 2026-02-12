@@ -20,11 +20,13 @@ export default function CreateAuction() {
     const [description, setDescription] = useState("");
     const [startingPrice, setStartingPrice] = useState("1.00");
     const [bidIncrement, setBidIncrement] = useState("1.00");
+    const [buyNowPrice, setBuyNowPrice] = useState("");
 
     // simple datetime-local helper
     const defaultStart = () => {
         const d = new Date();
-        d.setMinutes(d.getMinutes() + 10);
+        // Start immediately by default so the listing is active and bidders can bid right away.
+        // Sellers can still schedule it in the future if they want.
         return d.toISOString().slice(0, 16);
     };
 
@@ -114,6 +116,7 @@ export default function CreateAuction() {
             if (description) form.append("description", description);
             form.append("starting_price", startingPrice);
             form.append("bid_increment", bidIncrement);
+            if (buyNowPrice) form.append("buy_now_price", buyNowPrice);
             form.append("start_time", new Date(startTime).toISOString());
             form.append("end_time", new Date(endTime).toISOString());
 
@@ -158,8 +161,8 @@ export default function CreateAuction() {
                         <div style={{ display: "grid", gap: 10 }}>
                             <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required />
 
-                            <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
-                                <option value="">Category (optional)</option>
+                            <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} required>
+                                <option value="">Select category</option>
                                 {(Array.isArray(categories) ? categories : []).map((c) => (
                                     <option key={c.id} value={c.id}>
                                         {c.name}
@@ -194,6 +197,21 @@ export default function CreateAuction() {
                                     required
                                 />
                             </div>
+
+                            <label style={{ display: "grid", gap: 6 }}>
+                                <span className="small-muted">Direct claim / Buy now (optional)</span>
+                                <input
+                                    value={buyNowPrice}
+                                    onChange={(e) => setBuyNowPrice(e.target.value)}
+                                    placeholder="Enter grab amount (e.g., 250.00)"
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                />
+                                <span className="small-muted">
+                                    If a buyer chooses Buy Now, the auction will end immediately and they will win it.
+                                </span>
+                            </label>
 
                             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                                 <label style={{ display: "grid", gap: 6 }}>

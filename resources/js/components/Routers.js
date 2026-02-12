@@ -11,8 +11,12 @@ import AuctionDetail from "./AuctionDetail";
 import Dashboard from "./Dashboard";
 import AdminDashboard from "./AdminDashboard";
 import CreateAuction from "./CreateAuction";
+import SellerDashboard from "./SellerDashboard";
+import EditAuction from "./EditAuction";
 import AuctifyHeader from "./AuctifyHeader";
 import AboutUs from "./AboutUs";
+import Checkout from "./Checkout";
+import SellerMessages from "./SellerMessages";
 
 function RequireAuth({ children }) {
     const location = useLocation();
@@ -54,6 +58,10 @@ export default function Routers() {
                                     <Route path="/auctions/:id" element={<RequireAuth><AuctionDetail /></RequireAuth>} />
                                     <Route path="/aboutus" element={<RequireAuth><AboutUs /></RequireAuth>} />
                                     <Route path="/sell" element={<RequireAuth><CreateAuction /></RequireAuth>} />
+                                    <Route path="/seller" element={<RequireAuth><SellerDashboard /></RequireAuth>} />
+                                    <Route path="/seller/messages" element={<RequireAuth><SellerMessages /></RequireAuth>} />
+                                    <Route path="/seller/auctions/:id/edit" element={<RequireAuth><EditAuction /></RequireAuth>} />
+                                    <Route path="/checkout/:orderId" element={<RequireAuth><Checkout /></RequireAuth>} />
                                 </Routes>
                             </div>
                         </>

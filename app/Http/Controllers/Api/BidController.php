@@ -45,6 +45,28 @@ class BidController extends Controller
             $current = $lockedAuction->bids()->max('amount') ?? $lockedAuction->starting_price;
             $minAllowed = $current + $lockedAuction->bid_increment;
 
+            // Buy Now / Direct Claim: if configured, allow buyer to instantly win by bidding >= buy_now_price.
+            // (In MVP we treat it as a special bid that ends the auction immediately.)
+            if ($lockedAuction->buy_now_price !== null && (float) $validated['amount'] >= (float) $lockedAuction->buy_now_price) {
+                $bid = Bid::create([
+                    'auction_id' => $lockedAuction->id,
+                    'bidder_id' => $user->id,
+                    'amount' => $validated['amount'],
+                ]);
+
+                $lockedAuction->status = 'ended';
+                $lockedAuction->winning_bid_id = $bid->id;
+                $lockedAuction->end_time = now();
+                $lockedAuction->save();
+
+                return response()->json([
+                    'bid' => $bid,
+                    'current_bid' => $bid->amount,
+                    'buy_now' => true,
+                    'message' => 'Buy now successful. You won this auction.',
+                ], 201);
+            }
+
             if ((float)$validated['amount'] < (float)$minAllowed) {
                 return response()->json([
                     'message' => 'Bid too low',

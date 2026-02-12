@@ -1,12 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "../lib/api";
 import Countdown from "./Countdown";
 import StatusPill from "./StatusPill";
 import { formatMoney } from "../lib/time";
+import ChatWidget from "./ChatWidget";
 
 export default function AuctionDetail() {
     const { id } = useParams();
+    const navigate = useNavigate();
 
     const [auction, setAuction] = useState(null);
     const [selected, setSelected] = useState(0);
@@ -70,6 +72,7 @@ export default function AuctionDetail() {
     const currentBid = Number(auction.current_bid ?? auction.starting_price);
     const increment = Number(auction.bid_increment ?? 1);
     const minNext = currentBid + increment;
+    const buyNowPrice = auction.buy_now_price != null ? Number(auction.buy_now_price) : null;
 
     const isSellerBiddingOwnItem =
         user?.role === "seller" &&
@@ -111,6 +114,53 @@ export default function AuctionDetail() {
             await load();
         } catch (err) {
             setError(err.response?.data?.message || "Bid failed.");
+        } finally {
+            setPlacing(false);
+        }
+    };
+
+    const buyNow = async () => {
+        setError("");
+        setNotice("");
+
+        if (!user) {
+            setError("Please login to buy now.");
+            return;
+        }
+        if (user.role !== "buyer" && user.role !== "seller") {
+            setError("Only buyer/seller accounts can buy now.");
+            return;
+        }
+        if (isSellerBiddingOwnItem) {
+            setError("Sellers cannot buy their own auctions.");
+            return;
+        }
+        if (buyNowPrice == null) {
+            setError("Buy now is not available for this item.");
+            return;
+        }
+
+        setPlacing(true);
+        try {
+            const res = await api.post(`/auctions/${auction.id}/bids`, { amount: buyNowPrice });
+            setBidAmount("");
+            if (res?.data?.buy_now) {
+                setNotice("You grabbed it! Sending you to checkout...");
+                // Add to a pending order, then go to checkout.
+                const orderRes = await api.post(`/orders/items`, {
+                    auction_id: auction.id,
+                    purchase_type: "buy_now",
+                });
+                const orderId = orderRes?.data?.order?.id || orderRes?.data?.order_id;
+                if (orderId) {
+                    navigate(`/checkout/${orderId}`);
+                }
+            } else {
+                setNotice("Purchase submitted. Refreshing...");
+            }
+            await load();
+        } catch (err) {
+            setError(err.response?.data?.message || "Buy now failed.");
         } finally {
             setPlacing(false);
         }
@@ -172,6 +222,12 @@ export default function AuctionDetail() {
                                 <div className="meta-label">Total Bids</div>
                                 <div className="meta-value">{auction.bids?.length || 0}</div>
                             </div>
+                            {buyNowPrice != null ? (
+                                <div>
+                                    <div className="meta-label">Direct Claim (Buy Now)</div>
+                                    <div className="meta-value">{formatMoney(buyNowPrice)}</div>
+                                </div>
+                            ) : null}
                         </div>
 
                         <div style={{ height: 14 }} />
@@ -200,6 +256,20 @@ export default function AuctionDetail() {
                                 {placing ? "Placing…" : "Place Bid"}
                             </button>
                         </div>
+
+                        {buyNowPrice != null ? (
+                            <div style={{ marginTop: 10 }}>
+                                <button
+                                    className="auctify-btn"
+                                    type="button"
+                                    onClick={buyNow}
+                                    disabled={placing || isSellerBiddingOwnItem}
+                                    title="Buy now ends the auction immediately"
+                                >
+                                    {placing ? "Processing…" : `Buy Now for ${formatMoney(buyNowPrice)}`}
+                                </button>
+                            </div>
+                        ) : null}
 
                         <div style={{ height: 16 }} />
 
@@ -243,6 +313,8 @@ export default function AuctionDetail() {
 
                 <div className="auctify-spacer" />
             </div>
+
+            <ChatWidget auction={auction} />
         </div>
     );
 }

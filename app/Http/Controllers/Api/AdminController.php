@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Auction;
+use App\Models\Chat;
+use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -126,5 +128,62 @@ class AdminController extends Controller
 
         $auction->delete();
         return response()->json(['message' => 'Auction removed']);
+    }
+
+    // --- Chat moderation ---
+
+    public function flaggedChats(Request $request)
+    {
+        $this->requireAdmin($request);
+
+        $chats = Chat::query()
+            ->where('is_flagged', true)
+            ->with([
+                'auction:id,title',
+                'buyer:id,name,email',
+                'seller:id,name,email'
+            ])
+            ->orderByDesc('last_message_at')
+            ->paginate(20);
+
+        return response()->json($chats);
+    }
+
+    public function flaggedMessages(Request $request)
+    {
+        $this->requireAdmin($request);
+
+        $messages = Message::query()
+            ->where('is_flagged', true)
+            ->with([
+                'chat.auction:id,title',
+                'sender:id,name,email'
+            ])
+            ->latest()
+            ->paginate(30);
+
+        return response()->json($messages);
+    }
+
+    public function flagMessage(Request $request, Message $message)
+    {
+        $this->requireAdmin($request);
+
+        $validated = $request->validate([
+            'is_flagged' => ['required', 'boolean'],
+            'flag_reason' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $message->is_flagged = (bool) $validated['is_flagged'];
+        $message->flag_reason = $validated['flag_reason'] ?? null;
+        $message->save();
+
+        if ($message->chat) {
+            $message->chat->is_flagged = $message->is_flagged;
+            $message->chat->flag_reason = $message->flag_reason;
+            $message->chat->save();
+        }
+
+        return response()->json(['message' => $message]);
     }
 }

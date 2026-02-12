@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use App\Models\Category;
 
 class DatabaseSeeder extends Seeder
 {
@@ -33,6 +34,22 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt('qwerty123'),
             ]
         );
+
+        // Default auction categories
+        $defaultCategories = [
+            'Electronics',
+            'Fashion & Apparel',
+            'Collectibles',
+            'Home & Living',
+            'Vehicles',
+            'Jewelry & Watches',
+            'Art',
+            'Books & Media',
+        ];
+
+        foreach ($defaultCategories as $name) {
+            Category::updateOrCreate(['name' => $name]);
+        }
     }
 }
 //     public function logout(Request $request)

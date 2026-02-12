@@ -214,7 +214,10 @@ export default function AuctifyHeader() {
                         <Link className="auctify-btn" to="/admin">Admin</Link>
                     ) : null}
                     {user?.role === "seller" ? (
-                        <Link className="auctify-btn auctify-btn--primary" to="/sell">Sell</Link>
+                        <>
+                            <Link className="auctify-btn" to="/seller">My Sales</Link>
+                            <Link className="auctify-btn" to="/seller/messages">Messages</Link>
+                        </>
                     ) : null}
                 </div>
             </div>

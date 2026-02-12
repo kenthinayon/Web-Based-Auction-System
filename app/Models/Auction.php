@@ -16,10 +16,13 @@ class Auction extends Model
         'description',
         'starting_price',
         'bid_increment',
+        'buy_now_price',
         'start_time',
         'end_time',
         'status',
         'winning_bid_id',
+        'seller_deleted',
+        'seller_deleted_at',
     ];
 
     protected $casts = [
@@ -27,6 +30,9 @@ class Auction extends Model
         'end_time' => 'datetime',
         'starting_price' => 'decimal:2',
         'bid_increment' => 'decimal:2',
+        'buy_now_price' => 'decimal:2',
+        'seller_deleted' => 'bool',
+        'seller_deleted_at' => 'datetime',
     ];
 
     public function seller()
